@@ -42,12 +42,16 @@ exports.scoreUrl = async function(req, res) {
     // Certificate Statistics
     const certStats = await getCertificateStats(url.hostname);
     scoreDetails.certificateChecks = certStats;
-    scorePoints += certStats.freeRate < 0.25 ? 10 : 0;
-    scorePoints += certStats.freeRate < 0.10 ? 20 : 0;
-    scorePoints += certStats.freeCount === 0 ? 10 : 0;
-    scorePoints += certStats.holes === 0 ? 10 : 0;
-    const durationFactor = certStats.holes === 0 ? 0.5 : (1 / (4 + certStats.holes));
-    scorePoints += Math.min(Math.floor(certStats.duration * durationFactor), 50);
+
+    // Only add points if certs are available
+    if (certStats.duration >= 4) {
+        scorePoints += certStats.freeRate < 0.25 ? 10 : 0;
+        scorePoints += certStats.freeRate < 0.10 ? 20 : 0;
+        scorePoints += certStats.freeCount === 0 ? 10 : 0;
+        scorePoints += certStats.holes === 0 ? 10 : 0;
+        const durationFactor = certStats.holes === 0 ? 0.5 : (1 / (4 + certStats.holes));
+        scorePoints += Math.min(Math.floor(certStats.duration * durationFactor), 50);
+    }
 
     res.status(200).json({
         score: (Math.max(Math.min(scorePoints, 100), -100) / 100),
