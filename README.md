@@ -56,7 +56,8 @@ The final score is determined by weighted checks. The following formula is used 
 
 * **Spam Blacklisting** – blacklisted IP addresses will get -10 points.
 * **Certificate Checks** – use Certificate Transparency Logs to look for issued certificates for the given URL.
-  Old records of issued certificates are an indicator for the general age of an URL. The use of free certificate 
+  Old records of issued certificates are an indicator for the general age of an URL. An URL must have
+  at least 4 month of issued certificates to get a positive score. The use of free certificate 
   authorities has no negative impact on the score, but paid certificates get positive points.
   The maximum score for good certificate practice is 50 points.
   
