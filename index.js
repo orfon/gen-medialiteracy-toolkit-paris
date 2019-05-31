@@ -34,6 +34,17 @@ exports.scoreUrl = async function(req, res) {
         return;
     }
 
+    // Empty host names lead to a empty 200 response to keep the Chrome extension running;
+    // the service should return a bad request in a production-ready system.
+    if (!url.hostname) {
+        console.warn(`Empty hostname provided: ${url}`);
+        res.status(200).json({
+            score: 0,
+            details: {}
+        });
+        return;
+    }
+
     try {
         // Spam Blacklisting
         const spamBlacklisted = await isDomainBlacklisted(url.hostname) === true;
