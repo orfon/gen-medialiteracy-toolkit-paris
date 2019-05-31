@@ -36,7 +36,7 @@ exports.scoreUrl = async function(req, res) {
 
     // Empty host names lead to a empty 200 response to keep the Chrome extension running;
     // the service should return a bad request in a production-ready system.
-    if (!url.hostname) {
+    if (!url.hostname || url.hostname.indexOf(".") < 1) {
         console.warn(`Empty hostname provided: ${url}`);
         res.status(200).json({
             score: 0,
